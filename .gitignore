@@ -1,3 +1,55 @@
-# Local Claude Code workspace config — not part of the published site
+# ─── Secrets & environment (never commit — this is a public repo) ───
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+id_rsa
+id_dsa
+*_rsa
+*_dsa
+credentials
+credentials.json
+secrets.json
+.netrc
+.npmrc
+.pypirc
+
+# ─── OS cruft ───
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ─── Editors / IDEs ───
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+
+# ─── Logs & temp ───
+*.log
+*.tmp
+.cache/
+tmp/
+
+# ─── Tooling ───
+# node (in case any build tooling is added later)
+node_modules/
+# python (pre-commit venvs etc. live outside the repo, but just in case)
+__pycache__/
+*.pyc
+
+# ─── Local Claude Code workspace config — not part of the published site ───
 .claude/plans/
 .claude/settings.local.json

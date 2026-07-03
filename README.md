@@ -1,7 +1,7 @@
 # EarlBear — Landing Page (published)
 
 This repo publishes the EarlBear marketing site as **static HTML via GitHub Pages** off the `main`
-branch, served at **https://landing.earlbear.com**.
+branch, served at **https://discover.earlbear.com**.
 
 It is a **published mirror**, not the source of truth. The site is authored in the internal
 [`EarlBear/sad-sandbox`](https://github.com/EarlBear/sad-sandbox) repo under
@@ -11,7 +11,7 @@ It is a **published mirror**, not the source of truth. The site is authored in t
 |---|---|
 | `index.html` | Main marketing site (single-file: inline HTML + CSS + JS). |
 | `onboarding.html` | Multi-step onboarding flow (single-file). |
-| `CNAME` | Custom domain for GitHub Pages: `landing.earlbear.com`. |
+| `CNAME` | Custom domain for GitHub Pages: `discover.earlbear.com`. |
 | `.nojekyll` | Tells Pages to serve files as-is (no Jekyll processing). |
 | `.sync-source.json` | Records the exact `sad-sandbox` commit these files were synced from. |
 
@@ -40,5 +40,5 @@ python3 -m http.server 8080
 
 ## DNS
 
-`landing.earlbear.com` is a Cloudflare `CNAME` → `earlbear.github.io`. The apex/`www` records
+`discover.earlbear.com` is a Cloudflare `CNAME` → `earlbear.github.io`. The apex/`www` records
 (pointing at the Shopify store) are unaffected.
