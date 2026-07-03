@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding — EarlBear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --bg-soft: #f7f8fb; --bg-mid: #eef1f7;
+      --border: #e5e8ef; --border-md: #d4d9e3;
+      --text: #0b1020; --text-2: #4a5568; --muted: #7a8499;
+      --dark: #0b0e18; --dark-soft: #121726; --dark-border: rgba(255,255,255,.08);
+      --dark-text: #e8edf7; --dark-text-2: #a8b2c8; --dark-muted: #6a7488;
+      --blue: #2a4fd6; --blue-l: #3d6aff; --blue-bright: #5e85ff;
+      --gold: #b8902e; --gold-l: #d4a843; --gold-bright: #e8c06a;
+      --radius: 10px; --radius-lg: 16px; --radius-xl: 24px;
+      --ease: cubic-bezier(.22,.68,0,1.2);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-soft); color: var(--text);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    .ico { width: 22px; height: 22px; stroke-width: 1.6; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: var(--dark);
+      border-bottom: 1px solid var(--dark-border);
+      box-shadow: 0 2px 16px rgba(0,0,0,.18);
+      transition: transform .28s var(--ease);
+    }
+    nav.retracted { transform: translateY(-110%); }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; padding: 0 28px; max-width: 1280px; margin: 0 auto;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-mark {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--blue-bright) 0%, var(--blue-l) 35%, var(--gold-l) 100%);
+      -webkit-mask-image: url('https://earlbear.com/cdn/shop/files/Earl-Bear-logo-White.png?v=1692788956&width=260');
+              mask-image: url('https://earlbear.com/cdn/shop/files/Earl-Bear-logo-White.png?v=1692788956&width=260');
+      -webkit-mask-repeat: no-repeat;        mask-repeat: no-repeat;
+      -webkit-mask-position: center;          mask-position: center;
+      -webkit-mask-size: contain;             mask-size: contain;
+      filter: drop-shadow(0 2px 10px rgba(61,106,255,.35));
+    }
+    nav .logo-mark { width: 195px; height: 49px; }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a { font-size: .87rem; color: var(--dark-text-2); font-weight: 500; transition: color .15s; white-space: nowrap; }
+    .nav-links a:hover { color: var(--dark-text); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-actions .signin { font-size: .87rem; color: var(--dark-text-2); padding: 8px 12px; white-space: nowrap; }
+    .nav-actions .signin:hover { color: var(--dark-text); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: .9rem; font-weight: 600; border-radius: var(--radius);
+      padding: 12px 22px; cursor: pointer; border: 1px solid transparent;
+      transition: all .2s ease; white-space: nowrap; letter-spacing: -.01em;
+      font-family: inherit;
+    }
+    .btn-lg { padding: 15px 32px; font-size: .98rem; border-radius: 12px; }
+    .btn-gold { background: var(--gold-l); color: #1a1408; font-weight: 700; box-shadow: 0 1px 14px rgba(184,144,46,.25); }
+    .btn-gold:hover { background: var(--gold-bright); transform: translateY(-1px); box-shadow: 0 4px 24px rgba(184,144,46,.35); }
+    .btn-gold:disabled { background: var(--bg-mid); color: var(--muted); cursor: not-allowed; box-shadow: none; transform: none; }
+    .btn-ghost { background: transparent; color: var(--text-2); border-color: transparent; padding: 12px 14px; }
+    .btn-ghost:hover { color: var(--text); background: var(--bg); }
+    .btn-primary { background: var(--text); color: #fff; }
+    .btn-primary:hover { background: #1a2238; transform: translateY(-1px); }
+    nav .nav-actions .btn { padding: 8px 18px; font-size: .85rem; border-radius: 8px; }
+
+    /* Mobile nav */
+    .mob-hamburger {
+      display: none; width: 40px; height: 40px;
+      background: transparent; border: none; cursor: pointer; padding: 0;
+      flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+    }
+    .mob-hamburger span {
+      display: block; width: 22px; height: 2px; border-radius: 2px;
+      background: var(--dark-text); transition: transform .25s, opacity .2s;
+    }
+    .mob-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .mob-hamburger.open span:nth-child(2) { opacity: 0; }
+    .mob-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mob-nav-drawer {
+      display: none; position: fixed; top: 0; left: 0; right: 0;
+      background: var(--dark); border-bottom: 1px solid var(--dark-border);
+      box-shadow: 0 18px 30px -16px rgba(0,0,0,.4);
+      z-index: 199; padding: 72px 18px 22px;
+      flex-direction: column;
+      transform: translateY(-100%);
+      transition: transform .35s var(--ease);
+    }
+    .mob-nav-drawer.open { transform: translateY(0); }
+    .mob-nav-drawer a {
+      padding: 16px 4px; color: var(--dark-text); font-size: 1.02rem; font-weight: 500;
+      border-bottom: 1px solid var(--dark-border);
+    }
+    .mob-nav-drawer a:last-child { border-bottom: none; padding-top: 18px; color: var(--gold-l); font-weight: 600; }
+
+    /* ─── Progress bar (sticky below nav) ─── */
+    .progress-wrap {
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 90;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: transform .28s var(--ease);
+    }
+    .progress-wrap.retracted { transform: translateY(calc(-100% - 64px)); }
+    .progress-inner {
+      max-width: 720px; margin: 0 auto;
+      padding: 14px 28px 12px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .progress-meta {
+      display: flex; align-items: baseline; gap: 8px;
+      font-size: .76rem; color: var(--muted); font-weight: 600;
+      letter-spacing: .04em; text-transform: uppercase;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .progress-meta .count {
+      color: var(--text); font-weight: 700; font-size: .82rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .progress-track {
+      flex: 1; height: 4px; border-radius: 99px;
+      background: var(--bg-mid);
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue-l), var(--gold-l));
+      border-radius: 99px;
+      width: 0%;
+      transition: width .45s cubic-bezier(.22,.68,0,1);
+    }
+    .progress-section {
+      font-size: .76rem; color: var(--muted); font-weight: 600;
+      white-space: nowrap; flex-shrink: 0;
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+    .progress-section .sec-name { color: var(--gold); margin-left: 4px; }
+
+    /* ─── Main onboarding stage ─── */
+    .stage {
+      flex: 1; padding: 152px 0 140px;
+      display: flex; align-items: flex-start; justify-content: center;
+    }
+    .stage-inner {
+      width: 100%; max-width: 720px;
+      padding: 0 28px;
+    }
+
+    /* Step container */
+    .step {
+      display: none;
+      animation: stepIn .42s var(--ease);
+    }
+    .step.active { display: block; }
+    @keyframes stepIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .72rem; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .section-tag::before {
+      content: ''; width: 22px; height: 1px; background: currentColor; opacity: .6;
+    }
+    .q-num-display {
+      font-size: .9rem; color: var(--muted); font-weight: 600;
+      margin-bottom: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+    .q-text {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800; letter-spacing: -.025em; line-height: 1.18;
+      margin-bottom: 14px; color: var(--text);
+    }
+    .q-hint {
+      font-size: .95rem; color: var(--text-2);
+      line-height: 1.55; margin-bottom: 28px;
+    }
+
+    /* Inputs */
+    input[type="text"], input[type="email"], textarea {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius);
+      padding: 14px 16px; color: var(--text);
+      font-family: inherit; font-size: 1rem;
+      transition: border-color .15s, box-shadow .15s;
+      outline: none;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+      border-color: var(--blue-l);
+      box-shadow: 0 0 0 3px rgba(61,106,255,.1);
+    }
+    textarea { resize: vertical; min-height: 110px; }
+
+    /* Choices */
+    .choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .choices.col-1 { grid-template-columns: 1fr; }
+    .choice {
+      position: relative; cursor: pointer;
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius);
+      font-size: .95rem; font-weight: 500;
+      transition: all .15s;
+      user-select: none;
+    }
+    .choice input { position: absolute; opacity: 0; pointer-events: none; }
+    .choice .dot {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--border-md);
+      flex-shrink: 0; transition: all .15s;
+      background: var(--bg);
+    }
+    .choice .sq {
+      width: 18px; height: 18px; border-radius: 4px;
+      border: 2px solid var(--border-md);
+      flex-shrink: 0; transition: all .15s;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .choice .sq svg { width: 11px; height: 11px; color: #fff; opacity: 0; stroke-width: 3; }
+    .choice:hover { border-color: var(--text-2); background: var(--bg-soft); transform: translateY(-1px); }
+    .choice.selected {
+      border-color: var(--blue-l);
+      background: rgba(61,106,255,.05);
+      color: var(--blue);
+      font-weight: 600;
+    }
+    .choice.selected .dot {
+      background: var(--blue-l);
+      border-color: var(--blue-l);
+      box-shadow: inset 0 0 0 3px var(--bg);
+    }
+    .choice.selected .sq {
+      background: var(--blue-l); border-color: var(--blue-l);
+    }
+    .choice.selected .sq svg { opacity: 1; }
+    .choice .lbl { line-height: 1.35; flex: 1; }
+    .choice .kbd {
+      font-size: .7rem; font-weight: 700; color: var(--muted);
+      padding: 2px 7px; border-radius: 4px;
+      background: var(--bg-mid); border: 1px solid var(--border);
+      font-variant-numeric: tabular-nums; letter-spacing: .02em;
+    }
+    .choice.selected .kbd { background: var(--blue-l); color: #fff; border-color: var(--blue-l); }
+
+    /* Multi-select indicator */
+    .multi-meta {
+      font-size: .8rem; color: var(--muted);
+      margin-top: 12px; font-weight: 500;
+    }
+    .multi-meta .count { color: var(--text); font-weight: 700; }
+
+    /* Other reveal */
+    .other-reveal { margin-top: 12px; display: none; }
+    .other-reveal.show { display: block; }
+
+    /* Context line */
+    .context-line {
+      background: rgba(61,106,255,.06);
+      border-left: 3px solid var(--blue-l);
+      padding: 14px 18px; border-radius: 0 8px 8px 0;
+      font-size: .9rem; color: var(--text-2); line-height: 1.55;
+      margin-bottom: 22px;
+    }
+    .context-line strong { color: var(--text); font-weight: 600; }
+
+    /* ─── Step navigation footer (sticky) ─── */
+    .step-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 80;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      padding: 16px 28px;
+      padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    }
+    .step-nav-inner {
+      max-width: 720px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--text-2); font-size: .9rem; font-weight: 600;
+      background: none; border: none; cursor: pointer;
+      font-family: inherit;
+      padding: 8px 10px; border-radius: 8px;
+      transition: color .15s, background .15s;
+    }
+    .back-btn:hover { color: var(--text); background: var(--bg-soft); }
+    .back-btn:disabled { opacity: 0; pointer-events: none; }
+    .back-btn svg { width: 16px; height: 16px; stroke-width: 2.2; }
+    .nav-hint {
+      font-size: .76rem; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .nav-hint kbd {
+      font-size: .68rem; font-weight: 700; color: var(--text-2);
+      padding: 2px 6px; border-radius: 4px;
+      background: var(--bg-mid); border: 1px solid var(--border);
+      font-family: inherit; letter-spacing: .02em;
+    }
+
+    /* ─── Success state ─── */
+    .success-state {
+      display: none; text-align: center; padding: 40px 24px;
+    }
+    .success-state.show { display: block; }
+    .success-check {
+      width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 26px;
+      background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.3);
+      display: flex; align-items: center; justify-content: center; color: #10b981;
+    }
+    .success-check svg { width: 38px; height: 38px; stroke-width: 2.2; }
+    .success-state h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.4rem); font-weight: 800; letter-spacing: -.03em;
+      margin-bottom: 14px;
+    }
+    .success-state p {
+      font-size: 1rem; color: var(--text-2); max-width: 520px;
+      margin: 0 auto 32px; line-height: 1.65;
+    }
+    .success-cta-row {
+      display: inline-flex; align-items: center; gap: 18px; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .success-secondary {
+      color: var(--text-2); border-color: transparent;
+      background: transparent; padding: 14px 6px;
+    }
+    .success-secondary:hover { color: var(--text); background: transparent; transform: none; }
+    @media (max-width: 560px) {
+      .success-cta-row { flex-direction: column; gap: 10px; width: 100%; }
+      .success-cta-row .btn { width: 100%; }
+    }
+
+    /* Errors */
+    .err-msg {
+      font-size: .82rem; color: #dc2626; margin-top: 10px;
+      font-weight: 500; display: none;
+    }
+    .err-msg.show { display: block; }
+    .err-msg::before { content: '⚠  '; font-weight: 700; }
+    input.err, textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,.08); }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .mob-hamburger { display: flex; }
+      .mob-nav-drawer { display: flex; }
+      nav .nav-inner {
+        display: grid; grid-template-columns: 1fr auto 1fr;
+        align-items: center; height: 56px; padding: 0 14px;
+      }
+      .mob-hamburger { justify-self: start; }
+      .logo { justify-self: center; }
+      .nav-actions { justify-self: end; }
+      nav .logo-mark { width: 159px !important; height: 40px !important; }
+      .nav-actions .signin { display: none; }
+      nav .nav-actions .btn { padding: 7px 14px; font-size: .8rem; }
+      .progress-wrap { top: 56px; }
+    }
+    @media (max-width: 768px) {
+      .stage { padding: 130px 0 130px; }
+      .stage-inner { padding: 0 18px; }
+      .progress-inner { padding: 12px 18px 10px; gap: 10px; }
+      .progress-section { display: none; } /* hide section name on mobile to keep bar slim */
+      .choices { grid-template-columns: 1fr; }
+      .q-text { font-size: 1.4rem; }
+      .q-hint { font-size: .88rem; margin-bottom: 22px; }
+      .step-nav { padding: 12px 18px; }
+      .step-nav-inner { gap: 8px; }
+      .nav-hint { display: none; }
+      .step-nav .btn-gold { padding: 13px 22px; font-size: .9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════ NAV ════════════ -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <button class="mob-hamburger" id="mobBurger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="index.html" class="logo">
+      <span class="logo-mark"></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#features">Platform</a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#clients">Clients</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a href="#" class="signin">Sign in</a>
+      <a href="index.html#pricing" class="btn btn-gold">Get started</a>
+    </div>
+  </div>
+</nav>
+<div class="mob-nav-drawer" id="mobNav">
+  <a href="index.html#how">How it works</a>
+  <a href="index.html#features">Platform</a>
+  <a href="index.html#pricing">Pricing</a>
+  <a href="index.html#clients">Clients</a>
+  <a href="index.html#wins">Results</a>
+  <a href="index.html#contact">Contact</a>
+  <a href="#">Sign in</a>
+</div>
+
+<!-- ════════════ PROGRESS ════════════ -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-inner">
+    <div class="progress-meta">
+      <span class="count"><span id="pCur">1</span> / <span id="pTotal">18</span></span>
+      <span>complete</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-section" id="progressSection">
+      Section <span id="pSecNum">0</span><span class="sec-name" id="pSecName">— Quick context</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ STAGE ════════════ -->
+<main class="stage">
+  <div class="stage-inner" id="stageInner">
+
+    <!-- ━━━ PRE-STEP A: Industry ━━━ -->
+    <div class="step" data-step-id="industry" data-section="0" data-section-name="Quick context" data-auto-advance="true">
+      <div class="section-tag">Quick context</div>
+      <div class="q-num-display">Question A · Sets up the rest of the questionnaire</div>
+      <h2 class="q-text">What industry are you in?</h2>
+      <p class="q-hint">This shapes the rest of the questions — pick the closest match.</p>
+      <div class="choices col-1" data-q="industry">
+        <label class="choice"><input type="radio" name="industry" value="ecommerce"/><span class="dot"></span><span class="lbl">E-commerce / Retail</span></label>
+        <label class="choice"><input type="radio" name="industry" value="saas"/><span class="dot"></span><span class="lbl">SaaS / Technology</span></label>
+        <label class="choice"><input type="radio" name="industry" value="other"/><span class="dot"></span><span class="lbl">Other (services, B2B, agency, etc.)</span></label>
+      </div>
+    </div>
+
+    <!-- ━━━ PRE-STEP B: Objective ━━━ -->
+    <div class="step" data-step-id="objective" data-section="0" data-section-name="Quick context" data-auto-advance="true">
+      <div class="section-tag">Quick context</div>
+      <div class="q-num-display">Question B</div>
+      <h2 class="q-text">What's your primary objective for this site?</h2>
+      <p class="q-hint">Section 3 will sharpen this into a concrete outcome later.</p>
+      <div class="choices" data-q="objective">
+        <label class="choice"><input type="radio" name="objective" value="convert"/><span class="dot"></span><span class="lbl">Increase conversions</span></label>
+        <label class="choice"><input type="radio" name="objective" value="scale"/><span class="dot"></span><span class="lbl">Scale infrastructure</span></label>
+        <label class="choice"><input type="radio" name="objective" value="replatform"/><span class="dot"></span><span class="lbl">Replatform / migrate</span></label>
+        <label class="choice"><input type="radio" name="objective" value="launch"/><span class="dot"></span><span class="lbl">Launch new product / brand</span></label>
+        <label class="choice"><input type="radio" name="objective" value="retain"/><span class="dot"></span><span class="lbl">Retain customers / repeat sales</span></label>
+        <label class="choice"><input type="radio" name="objective" value="optimize"/><span class="dot"></span><span class="lbl">Optimize a working site</span></label>
+      </div>
+    </div>
+
+    <!-- ━━━ § 1 — The offer ━━━ -->
+    <div class="step" data-step-id="q1.1" data-section="1" data-section-name="The offer">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.1</div>
+      <h2 class="q-text">In one sentence, what do you sell?</h2>
+      <p class="q-hint">Keep it concrete — what someone would say at a dinner party.</p>
+      <input type="text" id="q11" placeholder="e.g. Premium clean-skincare for sensitive skin." />
+    </div>
+
+    <div class="step" data-step-id="q1.2-ecomm" data-section="1" data-section-name="The offer" data-show-if="industry=ecommerce" data-auto-advance="true">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.2</div>
+      <h2 class="q-text">What's your e-commerce model?</h2>
+      <div class="choices" data-q="model-ecomm">
+        <label class="choice"><input type="radio" name="model-ecomm" value="physical"/><span class="dot"></span><span class="lbl">Physical products</span></label>
+        <label class="choice"><input type="radio" name="model-ecomm" value="digital"/><span class="dot"></span><span class="lbl">Digital products / downloads</span></label>
+        <label class="choice"><input type="radio" name="model-ecomm" value="subscription"/><span class="dot"></span><span class="lbl">Subscription box / recurring</span></label>
+        <label class="choice"><input type="radio" name="model-ecomm" value="hybrid"/><span class="dot"></span><span class="lbl">Hybrid</span></label>
+      </div>
+    </div>
+
+    <div class="step" data-step-id="q1.2-saas" data-section="1" data-section-name="The offer" data-show-if="industry=saas" data-auto-advance="true">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.2</div>
+      <h2 class="q-text">What's your SaaS go-to-market model?</h2>
+      <div class="choices" data-q="model-saas">
+        <label class="choice"><input type="radio" name="model-saas" value="self-serve"/><span class="dot"></span><span class="lbl">Self-serve (signup + pay online)</span></label>
+        <label class="choice"><input type="radio" name="model-saas" value="sales-led"/><span class="dot"></span><span class="lbl">Sales-led (demo, then contract)</span></label>
+        <label class="choice"><input type="radio" name="model-saas" value="freemium"/><span class="dot"></span><span class="lbl">Freemium (free + paid upgrade)</span></label>
+        <label class="choice"><input type="radio" name="model-saas" value="hybrid"/><span class="dot"></span><span class="lbl">Hybrid</span></label>
+      </div>
+    </div>
+
+    <div class="step" data-step-id="q1.3" data-section="1" data-section-name="The offer">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.3</div>
+      <h2 class="q-text">What's your sub-industry or niche?</h2>
+      <p class="q-hint">Be specific — "skincare for sensitive skin" beats "skincare". "B2B accounting SaaS for agencies" beats "accounting SaaS".</p>
+      <input type="text" id="q13" placeholder="Describe your niche..." />
+    </div>
+
+    <div class="step" data-step-id="q1.4-ecomm" data-section="1" data-section-name="The offer" data-show-if="industry=ecommerce" data-auto-advance="true">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.4</div>
+      <h2 class="q-text">How big is your catalog?</h2>
+      <div class="choices" data-q="catalog-ecomm">
+        <label class="choice"><input type="radio" name="catalog-ecomm" value="hero"/><span class="dot"></span><span class="lbl">Single hero product</span></label>
+        <label class="choice"><input type="radio" name="catalog-ecomm" value="2-10"/><span class="dot"></span><span class="lbl">2 – 10 SKUs</span></label>
+        <label class="choice"><input type="radio" name="catalog-ecomm" value="11-50"/><span class="dot"></span><span class="lbl">11 – 50 SKUs</span></label>
+        <label class="choice"><input type="radio" name="catalog-ecomm" value="51-200"/><span class="dot"></span><span class="lbl">51 – 200 SKUs</span></label>
+        <label class="choice"><input type="radio" name="catalog-ecomm" value="200+"/><span class="dot"></span><span class="lbl">200+ SKUs</span></label>
+      </div>
+    </div>
+
+    <div class="step" data-step-id="q1.4-saas" data-section="1" data-section-name="The offer" data-show-if="industry=saas" data-auto-advance="true">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.4</div>
+      <h2 class="q-text">How is your product line structured?</h2>
+      <div class="choices" data-q="catalog-saas">
+        <label class="choice"><input type="radio" name="catalog-saas" value="single-one"/><span class="dot"></span><span class="lbl">Single product, one plan</span></label>
+        <label class="choice"><input type="radio" name="catalog-saas" value="single-multi"/><span class="dot"></span><span class="lbl">Single product, multiple tiers</span></label>
+        <label class="choice"><input type="radio" name="catalog-saas" value="multi"/><span class="dot"></span><span class="lbl">Multiple products</span></label>
+      </div>
+    </div>
+
+    <!-- 1.5 for e-commerce / other industries (one-time or recurring) -->
+    <div class="step" data-step-id="q1.5-other" data-section="1" data-section-name="The offer" data-show-if="industry=ecommerce|other" data-auto-advance="true">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.5</div>
+      <h2 class="q-text">What's the price point of your main offer?</h2>
+      <div class="choices" data-q="price">
+        <label class="choice"><input type="radio" name="price" value="<50"/><span class="dot"></span><span class="lbl">Under $50</span></label>
+        <label class="choice"><input type="radio" name="price" value="50-200"/><span class="dot"></span><span class="lbl">$50 – $200</span></label>
+        <label class="choice"><input type="radio" name="price" value="200-1000"/><span class="dot"></span><span class="lbl">$200 – $1,000</span></label>
+        <label class="choice"><input type="radio" name="price" value="1000-10000"/><span class="dot"></span><span class="lbl">$1,000 – $10,000</span></label>
+        <label class="choice"><input type="radio" name="price" value=">10000"/><span class="dot"></span><span class="lbl">Over $10,000</span></label>
+        <label class="choice"><input type="radio" name="price" value="recurring"/><span class="dot"></span><span class="lbl">Recurring (monthly)</span></label>
+      </div>
+    </div>
+
+    <!-- 1.5b — recurring sub-band, only triggered from the e-comm/other branch -->
+    <div class="step" data-step-id="q1.5b" data-section="1" data-section-name="The offer" data-show-if="price=recurring" data-auto-advance="true">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.5b</div>
+      <h2 class="q-text">What's the monthly price band?</h2>
+      <div class="choices" data-q="price-recurring">
+        <label class="choice"><input type="radio" name="price-recurring" value="<25"/><span class="dot"></span><span class="lbl">Under $25/mo</span></label>
+        <label class="choice"><input type="radio" name="price-recurring" value="25-100"/><span class="dot"></span><span class="lbl">$25 – $100/mo</span></label>
+        <label class="choice"><input type="radio" name="price-recurring" value="100-500"/><span class="dot"></span><span class="lbl">$100 – $500/mo</span></label>
+        <label class="choice"><input type="radio" name="price-recurring" value="500-2000"/><span class="dot"></span><span class="lbl">$500 – $2,000/mo</span></label>
+        <label class="choice"><input type="radio" name="price-recurring" value=">2000"/><span class="dot"></span><span class="lbl">Over $2,000/mo</span></label>
+      </div>
+    </div>
+
+    <!-- 1.5 for SaaS — multi-select; capture the full price architecture across paid tiers -->
+    <div class="step" data-step-id="q1.5-saas" data-section="1" data-section-name="The offer" data-show-if="industry=saas">
+      <div class="section-tag">Section 1 — The offer</div>
+      <div class="q-num-display">Question 1.5</div>
+      <h2 class="q-text">Which monthly price bands do your paid plans cover?</h2>
+      <p class="q-hint">Select all that apply. Skip your free tier. The full price architecture tells us your customer mix and where to focus the messaging.</p>
+      <div class="choices" data-q="price-saas" data-multi="true">
+        <label class="choice"><input type="checkbox" name="price-saas" value="saas-<50"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Under $50/mo</span></label>
+        <label class="choice"><input type="checkbox" name="price-saas" value="saas-50-200"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">$50 – $200/mo</span></label>
+        <label class="choice"><input type="checkbox" name="price-saas" value="saas-200-1000"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">$200 – $1,000/mo</span></label>
+        <label class="choice"><input type="checkbox" name="price-saas" value="saas-1000-5000"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">$1,000 – $5,000/mo</span></label>
+        <label class="choice"><input type="checkbox" name="price-saas" value="saas-5000-10000"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">$5,000 – $10,000/mo</span></label>
+        <label class="choice"><input type="checkbox" name="price-saas" value="saas->10000"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Over $10,000/mo</span></label>
+      </div>
+      <div class="multi-meta"><span class="count" id="priceSaasCount">0</span> selected</div>
+    </div>
+
+    <!-- ━━━ § 2 — The customer ━━━ -->
+    <div class="step" data-step-id="q2.1" data-section="2" data-section-name="The customer">
+      <div class="section-tag">Section 2 — The customer</div>
+      <div class="q-num-display">Question 2.1</div>
+      <h2 class="q-text">Describe your primary customer in one sentence.</h2>
+      <p class="q-hint">Who would your best customer be?</p>
+      <input type="text" id="q21" placeholder="e.g. Women 30–50 who care deeply about ingredients." />
+    </div>
+
+    <div class="step" data-step-id="q2.2" data-section="2" data-section-name="The customer" data-auto-advance="true">
+      <div class="section-tag">Section 2 — The customer</div>
+      <div class="q-num-display">Question 2.2</div>
+      <h2 class="q-text">Who is buying?</h2>
+      <div class="choices col-1" data-q="buyer">
+        <label class="choice"><input type="radio" name="buyer" value="b2c"/><span class="dot"></span><span class="lbl">B2C — individual consumers</span></label>
+        <label class="choice"><input type="radio" name="buyer" value="b2b-smb"/><span class="dot"></span><span class="lbl">B2B — small businesses / solopreneurs</span></label>
+        <label class="choice"><input type="radio" name="buyer" value="b2b-ent"/><span class="dot"></span><span class="lbl">B2B — mid-market / enterprise</span></label>
+        <label class="choice"><input type="radio" name="buyer" value="mixed"/><span class="dot"></span><span class="lbl">Mixed</span></label>
+      </div>
+    </div>
+
+    <div class="step" data-step-id="q2.3" data-section="2" data-section-name="The customer" data-show-if="industry=saas" data-auto-advance="true">
+      <div class="section-tag">Section 2 — The customer</div>
+      <div class="q-num-display">Question 2.3</div>
+      <h2 class="q-text">Who decides whether to buy your product?</h2>
+      <p class="q-hint">At <strong>your customer's</strong> company — the person whose approval the sale depends on. This shapes the depth of copy, the proof we lead with, and the friction we'll need to remove from the buying journey.</p>
+      <div class="choices col-1" data-q="decision">
+        <label class="choice"><input type="radio" name="decision" value="end-user"/><span class="dot"></span><span class="lbl">The end user signs up themselves — no internal approval needed</span></label>
+        <label class="choice"><input type="radio" name="decision" value="team-lead"/><span class="dot"></span><span class="lbl">A team lead or manager picks the tool for their team</span></label>
+        <label class="choice"><input type="radio" name="decision" value="exec"/><span class="dot"></span><span class="lbl">An executive or department head signs off on the purchase</span></label>
+        <label class="choice"><input type="radio" name="decision" value="procurement"/><span class="dot"></span><span class="lbl">Procurement, legal, or finance gets involved (longer cycle)</span></label>
+      </div>
+    </div>
+
+    <!-- ━━━ § 3 — Business outcome ━━━ -->
+    <div class="step" data-step-id="q3.1-ecomm" data-section="3" data-section-name="Business outcome" data-show-if="industry=ecommerce" data-auto-advance="true">
+      <div class="section-tag">Section 3 — Business outcome</div>
+      <div class="q-num-display">Question 3.1</div>
+      <div class="context-line" data-context-line>You said your objective is <strong data-context-objective>—</strong>. Let's sharpen that.</div>
+      <h2 class="q-text">What's the concrete business outcome you want?</h2>
+      <div class="choices col-1" data-q="outcome-ecomm">
+        <label class="choice"><input type="radio" name="outcome-ecomm" value="first-conv"/><span class="dot"></span><span class="lbl">Increase first-time conversion rate</span></label>
+        <label class="choice"><input type="radio" name="outcome-ecomm" value="diversify"/><span class="dot"></span><span class="lbl">Diversify sales beyond a hero product</span></label>
+        <label class="choice"><input type="radio" name="outcome-ecomm" value="launch"/><span class="dot"></span><span class="lbl">Drive sales to a new release / launch</span></label>
+        <label class="choice"><input type="radio" name="outcome-ecomm" value="repeat"/><span class="dot"></span><span class="lbl">Increase repeat purchase / retention</span></label>
+        <label class="choice"><input type="radio" name="outcome-ecomm" value="aov"/><span class="dot"></span><span class="lbl">Increase average order value</span></label>
+        <label class="choice"><input type="radio" name="outcome-ecomm" value="new-segment"/><span class="dot"></span><span class="lbl">Move into a new customer segment</span></label>
+        <label class="choice"><input type="radio" name="outcome-ecomm" value="other"/><span class="dot"></span><span class="lbl">Other (describe below)</span></label>
+      </div>
+      <div class="other-reveal" data-show-when="outcome-ecomm=other">
+        <input type="text" placeholder="Describe your specific outcome..." />
+      </div>
+    </div>
+
+    <div class="step" data-step-id="q3.1-saas" data-section="3" data-section-name="Business outcome" data-show-if="industry=saas" data-auto-advance="true">
+      <div class="section-tag">Section 3 — Business outcome</div>
+      <div class="q-num-display">Question 3.1</div>
+      <div class="context-line" data-context-line>You said your objective is <strong data-context-objective>—</strong>. Let's sharpen that.</div>
+      <h2 class="q-text">What's the concrete business outcome you want?</h2>
+      <div class="choices col-1" data-q="outcome-saas">
+        <label class="choice"><input type="radio" name="outcome-saas" value="trials"/><span class="dot"></span><span class="lbl">Increase trial / free signups</span></label>
+        <label class="choice"><input type="radio" name="outcome-saas" value="trial-paid"/><span class="dot"></span><span class="lbl">Increase trial-to-paid conversion</span></label>
+        <label class="choice"><input type="radio" name="outcome-saas" value="demos"/><span class="dot"></span><span class="lbl">Drive more demo bookings</span></label>
+        <label class="choice"><input type="radio" name="outcome-saas" value="adoption"/><span class="dot"></span><span class="lbl">Drive adoption of a new feature / plan tier</span></label>
+        <label class="choice"><input type="radio" name="outcome-saas" value="vertical"/><span class="dot"></span><span class="lbl">Expand into a new vertical / segment</span></label>
+        <label class="choice"><input type="radio" name="outcome-saas" value="enterprise"/><span class="dot"></span><span class="lbl">Increase enterprise / higher-tier deals</span></label>
+        <label class="choice"><input type="radio" name="outcome-saas" value="other"/><span class="dot"></span><span class="lbl">Other (describe below)</span></label>
+      </div>
+      <div class="other-reveal" data-show-when="outcome-saas=other">
+        <input type="text" placeholder="Describe your specific outcome..." />
+      </div>
+    </div>
+
+    <div class="step" data-step-id="q3.1-other" data-section="3" data-section-name="Business outcome" data-show-if="industry=other">
+      <div class="section-tag">Section 3 — Business outcome</div>
+      <div class="q-num-display">Question 3.1</div>
+      <div class="context-line" data-context-line>You said your objective is <strong data-context-objective>—</strong>. Let's sharpen that.</div>
+      <h2 class="q-text">What's the concrete business outcome you want?</h2>
+      <p class="q-hint">Describe in your own words.</p>
+      <input type="text" id="q31-other" placeholder="e.g. 'more qualified leads', 'higher retainer values'..." />
+    </div>
+
+    <div class="step" data-step-id="q3.2" data-section="3" data-section-name="Business outcome" data-auto-advance="true">
+      <div class="section-tag">Section 3 — Business outcome</div>
+      <div class="q-num-display">Question 3.2</div>
+      <h2 class="q-text">If a visitor only does ONE thing on the site, what should it be?</h2>
+      <p class="q-hint">Your primary CTA — pick the highest-value action.</p>
+      <div class="choices col-1" data-q="primary-cta">
+        <label class="choice"><input type="radio" name="primary-cta" value="cart"/><span class="dot"></span><span class="lbl">Add to cart / buy now</span></label>
+        <label class="choice"><input type="radio" name="primary-cta" value="subscribe"/><span class="dot"></span><span class="lbl">Subscribe / start a recurring order</span></label>
+        <label class="choice"><input type="radio" name="primary-cta" value="trial"/><span class="dot"></span><span class="lbl">Start a free trial</span></label>
+        <label class="choice"><input type="radio" name="primary-cta" value="demo"/><span class="dot"></span><span class="lbl">Book a demo</span></label>
+        <label class="choice"><input type="radio" name="primary-cta" value="quote"/><span class="dot"></span><span class="lbl">Request a quote / talk to sales</span></label>
+        <label class="choice"><input type="radio" name="primary-cta" value="signup"/><span class="dot"></span><span class="lbl">Sign up for a free account</span></label>
+        <label class="choice"><input type="radio" name="primary-cta" value="leadmag"/><span class="dot"></span><span class="lbl">Join email list / get a lead magnet</span></label>
+        <label class="choice"><input type="radio" name="primary-cta" value="other"/><span class="dot"></span><span class="lbl">Other (describe below)</span></label>
+      </div>
+      <div class="other-reveal" data-show-when="primary-cta=other">
+        <input type="text" placeholder="Describe your primary CTA..." />
+      </div>
+    </div>
+
+    <!-- ━━━ § 4 — Positioning ━━━ -->
+    <div class="step" data-step-id="q4.1" data-section="4" data-section-name="Positioning">
+      <div class="section-tag">Section 4 — Positioning</div>
+      <div class="q-num-display">Question 4.1</div>
+      <h2 class="q-text">What makes you different from competitors?</h2>
+      <p class="q-hint">One sentence. The sharper the better.</p>
+      <textarea id="q41" placeholder="e.g. 'Only DTC skincare brand using clinical-grade actives at drugstore price points.'"></textarea>
+    </div>
+
+    <div class="step" data-step-id="q4.2" data-section="4" data-section-name="Positioning">
+      <div class="section-tag">Section 4 — Positioning</div>
+      <div class="q-num-display">Question 4.2</div>
+      <h2 class="q-text">Name 1–3 competitors or brands you want to be compared favorably to.</h2>
+      <p class="q-hint">URLs optional. Quick notes on each are welcome.</p>
+      <textarea id="q42" placeholder="e.g. 'CeraVe (more premium positioning), Drunk Elephant (better price), The Ordinary (better formulations)'"></textarea>
+    </div>
+
+    <div class="step" data-step-id="q4.3" data-section="4" data-section-name="Positioning">
+      <div class="section-tag">Section 4 — Positioning</div>
+      <div class="q-num-display">Question 4.3</div>
+      <h2 class="q-text">What's your hero offer?</h2>
+      <p class="q-hint">The signature product or plan you want to lead with on the site.</p>
+      <input type="text" id="q43" placeholder="e.g. 'Our Vitamin C serum' or 'Pro plan with the AI add-on'" />
+    </div>
+
+    <!-- ━━━ § 5 — Trust & assets ━━━ -->
+    <div class="step" data-step-id="q5.1" data-section="5" data-section-name="Trust & assets">
+      <div class="section-tag">Section 5 — Trust &amp; assets</div>
+      <div class="q-num-display">Question 5.1</div>
+      <h2 class="q-text">Which assets do you have ready to use?</h2>
+      <p class="q-hint">Select all that apply — we'll lead with your strongest.</p>
+      <div class="choices col-1" data-q="assets" data-multi="true">
+        <label class="choice"><input type="checkbox" name="assets" value="reviews"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Customer reviews / ratings</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="testimonials"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Written testimonials with names + photos</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="video-testi"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Video testimonials</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="case-studies"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Detailed case studies with measurable results</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="founder"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Founder / team story</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="press"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Press mentions / media features</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="awards"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Awards, certifications, compliance (HIPAA, SOC2…)</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="logos"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Recognizable customer logos</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="demo-video"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Product demo video</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="product-photo"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">High-quality product photography</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="ui-screens"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Product screenshots / UI imagery</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="integrations"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Integrations list</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="partnerships"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Notable partnerships</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="track-record"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Track-record stats (years, customers served)</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="ugc"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">User-generated content / social proof</span></label>
+        <label class="choice"><input type="checkbox" name="assets" value="guarantee"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Guarantee or risk reversal (money-back, free returns…)</span></label>
+      </div>
+      <div class="multi-meta"><span class="count" id="assetsCount">0</span> selected</div>
+    </div>
+
+    <div class="step" data-step-id="q5.2" data-section="5" data-section-name="Trust & assets">
+      <div class="section-tag">Section 5 — Trust &amp; assets</div>
+      <div class="q-num-display">Question 5.2</div>
+      <h2 class="q-text">Of those, which 2–3 are strongest?</h2>
+      <p class="q-hint">These are the ones we'll lead with on the site.</p>
+      <textarea id="q52" placeholder="e.g. '50+ video testimonials, recognizable customer logos (Sephora, Ulta), Allure Best of Beauty 2024'"></textarea>
+    </div>
+
+    <!-- ━━━ § 6 — Brand & tone ━━━ -->
+    <div class="step" data-step-id="q6.1" data-section="6" data-section-name="Brand & tone">
+      <div class="section-tag">Section 6 — Brand &amp; tone</div>
+      <div class="q-num-display">Question 6.1</div>
+      <h2 class="q-text">Pick up to 2 tones that describe your brand voice.</h2>
+      <p class="q-hint">More than 2 dilutes the voice — make it deliberate.</p>
+      <div class="choices" data-q="tone" data-multi="true" data-max="2">
+        <label class="choice"><input type="checkbox" name="tone" value="professional"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Professional / authoritative</span></label>
+        <label class="choice"><input type="checkbox" name="tone" value="friendly"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Friendly / conversational</span></label>
+        <label class="choice"><input type="checkbox" name="tone" value="bold"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Bold / disruptive</span></label>
+        <label class="choice"><input type="checkbox" name="tone" value="technical"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Technical / expert</span></label>
+        <label class="choice"><input type="checkbox" name="tone" value="warm"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Warm / human</span></label>
+        <label class="choice"><input type="checkbox" name="tone" value="premium"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Premium / aspirational</span></label>
+        <label class="choice"><input type="checkbox" name="tone" value="playful"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Playful / casual</span></label>
+        <label class="choice"><input type="checkbox" name="tone" value="minimal"/><span class="sq"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lbl">Minimal / understated</span></label>
+      </div>
+      <div class="multi-meta"><span class="count" id="toneCount">0</span> / 2 selected</div>
+    </div>
+
+    <!-- ━━━ § 7 — Market scope ━━━ -->
+    <div class="step" data-step-id="q7.1" data-section="7" data-section-name="Market scope" data-auto-advance="true">
+      <div class="section-tag">Section 7 — Market scope</div>
+      <div class="q-num-display">Question 7.1</div>
+      <h2 class="q-text">Where do you sell or serve customers?</h2>
+      <div class="choices col-1" data-q="scope">
+        <label class="choice"><input type="radio" name="scope" value="local"/><span class="dot"></span><span class="lbl">Local — one city or metro</span></label>
+        <label class="choice"><input type="radio" name="scope" value="regional"/><span class="dot"></span><span class="lbl">Regional — state/province or multiple metros</span></label>
+        <label class="choice"><input type="radio" name="scope" value="national"/><span class="dot"></span><span class="lbl">National</span></label>
+        <label class="choice"><input type="radio" name="scope" value="international"/><span class="dot"></span><span class="lbl">International / global</span></label>
+        <label class="choice"><input type="radio" name="scope" value="expanding"/><span class="dot"></span><span class="lbl">National, expanding internationally</span></label>
+      </div>
+    </div>
+
+    <div class="step" data-step-id="q7.2" data-section="7" data-section-name="Market scope" data-show-if="scope=local|regional">
+      <div class="section-tag">Section 7 — Market scope</div>
+      <div class="q-num-display">Question 7.2</div>
+      <h2 class="q-text">Which city or region?</h2>
+      <input type="text" id="q72" placeholder="e.g. 'Austin, TX' or 'Pacific Northwest'" />
+    </div>
+
+    <!-- ━━━ SUCCESS ━━━ -->
+    <div class="success-state" id="successState">
+      <div class="success-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>That's everything we need.</h2>
+      <p>Our team will review your responses, prepare your custom playbook, and walk you through a <strong style="color:var(--text);font-weight:600">preliminary demo within 5 business days</strong>. You'll get a confirmation email and a calendar invite for kickoff.</p>
+      <div class="success-cta-row">
+        <a href="index.html" class="btn btn-primary btn-lg">Back to homepage</a>
+        <a href="index.html#contact" class="btn btn-ghost btn-lg success-secondary">Have questions? Contact us →</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ════════════ STEP NAVIGATION ════════════ -->
+<div class="step-nav" id="stepNav">
+  <div class="step-nav-inner">
+    <button class="back-btn" id="backBtn" disabled>
+      <svg class="ico" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <div class="nav-hint">
+      Press <kbd>Enter</kbd> to continue
+    </div>
+    <button class="btn btn-gold" id="continueBtn">
+      Continue
+      <svg class="ico" viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  // ─── Nav scroll + drawer ───
+  const mainNav = document.getElementById('mainNav');
+  const progressWrap = document.getElementById('progressWrap');
+  const mobBurger = document.getElementById('mobBurger');
+  const mobNav = document.getElementById('mobNav');
+  if (mobBurger && mobNav) {
+    mobBurger.addEventListener('click', () => {
+      const open = mobBurger.classList.toggle('open');
+      mobNav.classList.toggle('open', open);
+    });
+    mobNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mobBurger.classList.remove('open');
+      mobNav.classList.remove('open');
+    }));
+  }
+  let lastY = 0;
+  function onScroll() {
+    const y = window.scrollY;
+    if (window.innerWidth <= 768) {
+      const delta = y - lastY;
+      if (delta > 2 && y > 60) {
+        mainNav.classList.add('retracted');
+        progressWrap.classList.add('retracted');
+      } else if (delta < -2 || y <= 4) {
+        mainNav.classList.remove('retracted');
+        progressWrap.classList.remove('retracted');
+      }
+    } else {
+      mainNav.classList.remove('retracted');
+      progressWrap.classList.remove('retracted');
+    }
+    lastY = y;
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // ═══════════════════════════════════════════════════════════════
+  //                INTERACTIVE ONBOARDING ENGINE
+  // ═══════════════════════════════════════════════════════════════
+  const allSteps = Array.from(document.querySelectorAll('.step'));
+  const successState = document.getElementById('successState');
+  const backBtn = document.getElementById('backBtn');
+  const continueBtn = document.getElementById('continueBtn');
+  const stepNav = document.getElementById('stepNav');
+  const pCur = document.getElementById('pCur');
+  const pTotal = document.getElementById('pTotal');
+  const progressFill = document.getElementById('progressFill');
+  const pSecNum = document.getElementById('pSecNum');
+  const pSecName = document.getElementById('pSecName');
+
+  // ─── State ───
+  const state = {};                  // collected answers, keyed by input name
+  let currentStepId = allSteps[0].dataset.stepId;
+  let history = [];                  // stack of visited step IDs (for Back)
+
+  // ─── Compute active sequence ───
+  function activeSequence() {
+    return allSteps.filter(step => {
+      const expr = step.dataset.showIf;
+      if (!expr) return true;
+      const [key, valsStr] = expr.split('=');
+      return valsStr.split('|').includes(state[key]);
+    });
+  }
+
+  // ─── Collect state from inputs ───
+  function refreshState() {
+    document.querySelectorAll('input[type="radio"]').forEach(i => {
+      if (i.checked) state[i.name] = i.value;
+    });
+    // Multi
+    document.querySelectorAll('.choices[data-multi="true"]').forEach(grp => {
+      const name = grp.querySelector('input').name;
+      state[name] = Array.from(grp.querySelectorAll('input:checked')).map(i => i.value);
+    });
+    document.querySelectorAll('input[type="text"], textarea').forEach(i => {
+      const key = i.id || i.name;
+      if (i.value) state[key] = i.value;
+    });
+  }
+
+  // ─── Show a step by ID ───
+  function showStep(stepId) {
+    allSteps.forEach(s => s.classList.remove('active'));
+    const target = allSteps.find(s => s.dataset.stepId === stepId);
+    if (!target) return;
+    target.classList.add('active');
+    currentStepId = stepId;
+    updateProgress();
+    updateNavButtons();
+    updateContextLines();
+    updateOtherReveals();
+    // Auto-focus first input in the new step (smooth UX)
+    setTimeout(() => {
+      const firstInput = target.querySelector('input[type="text"], textarea');
+      if (firstInput) firstInput.focus();
+    }, 460);
+    // Scroll to top of stage on small screens
+    if (window.innerWidth <= 768) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  // ─── Next / Back ───
+  function nextStep() {
+    refreshState();
+    if (!validateCurrentStep()) return;
+    const seq = activeSequence();
+    const i = seq.findIndex(s => s.dataset.stepId === currentStepId);
+    if (i === -1 || i === seq.length - 1) {
+      submit();
+      return;
+    }
+    history.push(currentStepId);
+    showStep(seq[i + 1].dataset.stepId);
+  }
+  function backStep() {
+    if (!history.length) return;
+    const prevId = history.pop();
+    showStep(prevId);
+  }
+
+  // ─── Validation ───
+  function validateCurrentStep() {
+    const step = allSteps.find(s => s.dataset.stepId === currentStepId);
+    if (!step) return true;
+    // Required for radio/checkbox groups + text inputs
+    const radios = step.querySelectorAll('.choices[data-q]:not([data-multi="true"])');
+    let ok = true;
+    radios.forEach(grp => {
+      const name = grp.querySelector('input').name;
+      if (!state[name]) ok = false;
+    });
+    const multis = step.querySelectorAll('.choices[data-multi="true"]');
+    multis.forEach(grp => {
+      const name = grp.querySelector('input').name;
+      if (!state[name] || state[name].length === 0) {
+        // For tone require 1 minimum, for assets allow 0 (optional)
+        if (name === 'tone') ok = false;
+      }
+    });
+    // Text fields
+    const texts = step.querySelectorAll('input[type="text"], textarea');
+    texts.forEach(t => {
+      // Required unless it's inside an "other-reveal" that's hidden
+      const inHiddenReveal = t.closest('.other-reveal') && !t.closest('.other-reveal').classList.contains('show');
+      if (inHiddenReveal) return;
+      // For the "other-reveal" inputs and standalone, require non-empty
+      const isRevealInput = !!t.closest('.other-reveal');
+      const isOptional = !!t.closest('.q-block') && t.placeholder.includes('optional');
+      if (!t.value.trim() && !isOptional) {
+        // For "other" reveal: only required if visible
+        if (isRevealInput && !t.closest('.other-reveal').classList.contains('show')) return;
+        t.classList.add('err');
+        ok = false;
+      } else {
+        t.classList.remove('err');
+      }
+    });
+    return ok;
+  }
+
+  // ─── Progress ───
+  function updateProgress() {
+    const seq = activeSequence();
+    const idx = seq.findIndex(s => s.dataset.stepId === currentStepId);
+    const total = seq.length;
+    const cur = idx + 1;
+    pCur.textContent = cur;
+    pTotal.textContent = total;
+    progressFill.style.width = ((cur - 1) / total * 100) + '%';
+    // Section info
+    const step = seq[idx];
+    if (step) {
+      const secNum = step.dataset.section || '0';
+      const secName = step.dataset.sectionName || '';
+      pSecNum.textContent = secNum === '0' ? '0' : secNum;
+      pSecName.textContent = ' — ' + secName;
+    }
+    // Animate full bar before submit
+    if (cur === total) {
+      progressFill.style.width = ((cur) / total * 100) + '%';
+    }
+  }
+
+  // ─── Nav buttons ───
+  function updateNavButtons() {
+    backBtn.disabled = history.length === 0;
+    const seq = activeSequence();
+    const idx = seq.findIndex(s => s.dataset.stepId === currentStepId);
+    const isLast = idx === seq.length - 1;
+    continueBtn.innerHTML = isLast
+      ? 'Submit onboarding <svg class="ico" viewBox="0 0 24 24" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
+      : 'Continue <svg class="ico" viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';
+  }
+
+  // ─── Context line ───
+  const objectiveLabels = {
+    convert: 'Increase conversions',
+    scale: 'Scale infrastructure',
+    replatform: 'Replatform / migrate',
+    launch: 'Launch a new product or brand',
+    retain: 'Retain customers / repeat sales',
+    optimize: 'Optimize a working site'
+  };
+  function updateContextLines() {
+    document.querySelectorAll('[data-context-objective]').forEach(el => {
+      el.textContent = objectiveLabels[state.objective] || '—';
+    });
+  }
+
+  // ─── Other reveals ───
+  function updateOtherReveals() {
+    document.querySelectorAll('.other-reveal').forEach(el => {
+      const expr = el.dataset.showWhen;
+      const [key, val] = expr.split('=');
+      el.classList.toggle('show', state[key] === val);
+    });
+  }
+
+  // ─── Choice interactions — robust manual toggle with preventDefault ───
+  document.querySelectorAll('.choices').forEach(group => {
+    const isMulti = group.dataset.multi === 'true';
+    const max = parseInt(group.dataset.max, 10) || Infinity;
+
+    group.addEventListener('click', (e) => {
+      const choice = e.target.closest('.choice');
+      if (!choice || !group.contains(choice)) return;
+      // Stop native label-to-input forwarding so we control the state
+      e.preventDefault();
+
+      const input = choice.querySelector('input');
+      if (!input) return;
+
+      if (isMulti) {
+        // Toggle this one
+        input.checked = !input.checked;
+        // Enforce max — if we just exceeded, drop the oldest other checked
+        if (max < Infinity) {
+          const checked = Array.from(group.querySelectorAll('input:checked'));
+          if (checked.length > max) {
+            const toRemove = checked.find(i => i !== input);
+            if (toRemove) toRemove.checked = false;
+          }
+        }
+      } else {
+        // Single-select: clear all, set this one
+        group.querySelectorAll('input').forEach(i => i.checked = false);
+        input.checked = true;
+      }
+
+      // Sync visual .selected class on every choice in this group
+      group.querySelectorAll('input').forEach(i => {
+        i.closest('.choice').classList.toggle('selected', i.checked);
+      });
+
+      refreshState();
+
+      // Live counters
+      if (group.dataset.q === 'assets') {
+        const c = group.querySelectorAll('input:checked').length;
+        const out = document.getElementById('assetsCount');
+        if (out) out.textContent = c;
+      }
+      if (group.dataset.q === 'tone') {
+        const c = group.querySelectorAll('input:checked').length;
+        const out = document.getElementById('toneCount');
+        if (out) out.textContent = c;
+      }
+      if (group.dataset.q === 'price-saas') {
+        const c = group.querySelectorAll('input:checked').length;
+        const out = document.getElementById('priceSaasCount');
+        if (out) out.textContent = c;
+      }
+
+      updateOtherReveals();
+
+      // Auto-advance for single-select if the step opts in (and "Other" wasn't chosen)
+      const step = choice.closest('.step');
+      if (!isMulti && step && step.dataset.autoAdvance === 'true' && input.checked) {
+        const otherReveal = step.querySelector(`.other-reveal[data-show-when$="=${input.value}"]`);
+        if (otherReveal) return;
+        setTimeout(nextStep, 360);
+      }
+    });
+  });
+
+  // ─── Text input live state ───
+  document.querySelectorAll('input[type="text"], textarea').forEach(inp => {
+    inp.addEventListener('input', () => {
+      inp.classList.remove('err');
+      refreshState();
+    });
+  });
+
+  // ─── Keyboard ───
+  document.addEventListener('keydown', (e) => {
+    if (successState.classList.contains('show')) return;
+    if (e.key === 'Enter' && !e.shiftKey) {
+      // If focused on textarea, allow Shift+Enter to create newline; plain Enter advances
+      if (e.target.tagName === 'TEXTAREA' && !e.metaKey && !e.ctrlKey) {
+        // For textarea, require Cmd/Ctrl+Enter to advance; allow Enter for newline
+        if (!e.metaKey && !e.ctrlKey) return;
+      }
+      e.preventDefault();
+      nextStep();
+    } else if (e.key === 'Escape' || (e.key === 'Backspace' && e.metaKey)) {
+      e.preventDefault();
+      backStep();
+    }
+  });
+
+  continueBtn.addEventListener('click', nextStep);
+  backBtn.addEventListener('click', backStep);
+
+  // ─── Submit ───
+  function submit() {
+    refreshState();
+    // Show success
+    allSteps.forEach(s => s.classList.remove('active'));
+    successState.classList.add('show');
+    stepNav.style.display = 'none';
+    progressFill.style.width = '100%';
+    pCur.textContent = pTotal.textContent;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ─── Boot ───
+  showStep('industry');
+</script>
+</body>
+</html>

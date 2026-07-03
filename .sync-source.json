@@ -1,0 +1,12 @@
+{
+  "source_repo": "EarlBear/sad-sandbox",
+  "source_path": "EarlBear/LandingPage",
+  "source_clone": "../sad-sandbox",
+  "files": [
+    "index.html",
+    "onboarding.html"
+  ],
+  "last_synced_sha": "e4f1689967775925df1cc582cbaba6190165d8b8",
+  "last_synced_short": "e4f1689",
+  "last_synced_commit_date": "2026-07-02T21:39:36-05:00"
+}

@@ -1,0 +1,3 @@
+# Local Claude Code workspace config — not part of the published site
+.claude/plans/
+.claude/settings.local.json
